@@ -1,0 +1,77 @@
+.dark-theme {
+    --color-primary: white;
+    --background-color: #1a1e26;
+    --btn-background: rgb(81, 81, 253);
+    --input-background: white;
+}
+
+.light-theme {
+    --color-primary: black;
+    --background-color: white;
+    --btn-background: #7b2ecd;
+    --input-background: rgb(231, 231, 231);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--color-primary);
+    font-family: roboto;
+}
+
+#form {
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-heading-container {
+    width: 300px;
+}
+
+.form-heading {
+    text-align: center;
+    font-size: 27px;
+    text-transform: uppercase;
+    letter-spacing: 0.04cm;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+label {
+    font-size: 16px;
+}
+
+.text-input {
+    width: 200px;
+    background-color: var(--input-background);
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+    height: 30px;
+    width: 300px;
+}
+
+.submit-btn {
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 16px;
+    width: 300px;
+    text-transform: uppercase;
+    background-color: var(--btn-background);
+    color: white;
+}

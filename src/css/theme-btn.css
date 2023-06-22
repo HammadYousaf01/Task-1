@@ -1,0 +1,36 @@
+
+.navbar {
+    height: 5vh;
+    display: flex;
+    justify-content: end;
+    padding: 20px;
+}
+
+.circle {
+    height: 50px;
+    width: 50px;
+    /* background-color: grey; */
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.left-circle,
+.right-circle {
+    height: 45px;
+    width: 24px;
+}
+
+.left-circle {
+    background-color: black;
+    border-radius: 90px 0 0 90px;
+}
+
+.right-circle {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 0 90px 90px 0;
+}
