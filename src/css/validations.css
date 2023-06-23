@@ -1,0 +1,21 @@
+
+
+
+.success-border {
+    border-right: 7px solid green;
+}
+
+.error-border {
+    border-right: 7px solid red;
+}
+
+.error-message {
+    margin-top: 10px;
+    color: var(--color-primary);
+    text-decoration-line: underline;
+    width: 300px;
+}
+
+.none-display {
+    display: none;
+}
