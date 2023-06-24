@@ -6,72 +6,65 @@ const email = document.querySelector("#email");
 const password = document.querySelector("#password");
 const confirmPassword = document.querySelector("#confirm-password");
 
-username.addEventListener("input", e => {
+username.addEventListener("input", applyUsernaneValidations);
+email.addEventListener("input", applyEmailValidations);
+password.addEventListener("input", applyPasswordValidations);
+confirmPassword.addEventListener("input", applyConfirmPasswordValidations);
+
+async function applyUsernaneValidations(e) {
     const usernameError = document.querySelector("#username-error");
 
-    (async () => {
-        const usernameLength = await debounce(e.target.value.length);
+    const usernameLength = await debounce(e.target.value.length);
 
-        if (usernameLength < 4) {
-            addErrorBorder(username);
-            reportError(usernameError, "Username must be longer than 4 characters");
-        } else if (usernameLength > 20) {
-            addErrorBorder(username);
-            reportError(usernameError, "Username must be shorter than 20 characters");
-        } else {
-            addSuccessBorder(username);
-            removeError(usernameError);
-        }
-    })();
-})
+    if (usernameLength < 4) {
+        addErrorBorder(username);
+        reportError(usernameError, "Username must be longer than 4 characters");
+    } else if (usernameLength > 20) {
+        addErrorBorder(username);
+        reportError(usernameError, "Username must be shorter than 20 characters");
+    } else {
+        addSuccessBorder(username);
+        removeError(usernameError);
+    }
+}
 
-email.addEventListener("input", e => {
+async function applyEmailValidations(e) {
     const emailError = document.querySelector("#email-error");
 
-    (async () => {
-        if (validateEmail(await debounce(e.target.value))) {
-            addSuccessBorder(email);
-            removeError(emailError);
-        } else {
-            addErrorBorder(email);
-            reportError(emailError, "Email is invalid")
-        }
-    })()
-})
+    if (validateEmail(await debounce(e.target.value))) {
+        addSuccessBorder(email);
+        removeError(emailError);
+    } else {
+        addErrorBorder(email);
+        reportError(emailError, "Email is invalid")
+    }
+}
 
-
-password.addEventListener("input", e => {
+async function applyPasswordValidations(e) {
     const passwordError = document.querySelector("#password-error");
 
-    (async () => {
-        const passwordLength = await debounce(e.target.value.length);
-        if (passwordLength < 8) {
-            reportError(passwordError, "Password needs to be longer than 8 characters");
-            addErrorBorder(password)
-        } else {
-            removeError(passwordError);
-            addSuccessBorder(password);
-        }
-    })()
-    
-})
+    const passwordLength = await debounce(e.target.value.length);
+    if (passwordLength < 8) {
+        reportError(passwordError, "Password needs to be longer than 8 characters");
+        addErrorBorder(password)
+    } else {
+        removeError(passwordError);
+        addSuccessBorder(password);
+    }
+}
 
+async function applyConfirmPasswordValidations(e) {
+    const confirmPasswordError = document.querySelector("#confirm-password-error");
 
-confirmPassword.addEventListener("input", e => {
-
-    (async () => {
-        const confirmPasswordError = document.querySelector("#confirm-password-error");
-
-        const confirmPasswordValue = await debounce(e.target.value);
-        if (confirmPasswordValue !== password.value) {
-            reportError(confirmPasswordError, "Passwords need to match");
-            addErrorBorder(confirmPassword);
-        } else {
-            removeError(confirmPasswordError);
-            addSuccessBorder(confirmPassword);
-        }
-    })()
-})
+    const confirmPasswordValue = await debounce(e.target.value);
+    if (confirmPasswordValue !== password.value) {
+        reportError(confirmPasswordError, "Passwords don't match");
+        addErrorBorder(confirmPassword);
+    } else {
+        removeError(confirmPasswordError);
+        addSuccessBorder(confirmPassword)
+    }
+}
 
 function reportError(element, message) {
     element.textContent = message;
