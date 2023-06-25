@@ -6,44 +6,46 @@ const email = document.querySelector("#email");
 const password = document.querySelector("#password");
 const confirmPassword = document.querySelector("#confirm-password");
 
-username.addEventListener("input", async () => {
-    const usernameLength = await debounce(username.value.length);
-    validateUsername(usernameLength);
-});
-
-email.addEventListener("input", async () => {
-    const emailValue = await debounce(email.value);
-    validateEmail2(emailValue);
-});
-
-password.addEventListener("input", async () => {
-    if (confirmPassword.value) {
-        validateConfirmPassword(confirmPassword.value);
-    }
-
-    const passwordLength = await debounce(password.value.length);
-    validatePassword(passwordLength);
-});
-
-confirmPassword.addEventListener("input", async () => {
-    const confirmPasswordValue = await debounce(confirmPassword.value);
-    return validateConfirmPassword(confirmPasswordValue);
-});
 
 form.addEventListener("submit", async e => {
-    e.preventDefault();
 
-    const usernameValidationsResponse = validateUsername(username.value.length);
-    const emailValidationsResponse = validateEmail2(email.value);
-    const passwordValidationsResponse = validatePassword(password.value);
-    const confirmPasswordValidationsResponse = validateConfirmPassword(confirmPassword.value);
-    if (usernameValidationsResponse && emailValidationsResponse && passwordValidationsResponse && confirmPasswordValidationsResponse) {
-        form.submit();
+    const isUsernameValid = applyUsernameValidations(username.value.length);
+    const isEmailValid = applyEmailValidations(email.value);
+    const isPasswordValid = applyPasswordValidations(password.value);
+    const isConfirmPasswordValid = applyConfirmPasswordlidations(confirmPassword.value);
+
+    if (!(isUsernameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid)) {
+        e.preventDefault();
     } 
 
 })
 
-function validateUsername(usernameLength) {
+username.addEventListener("input", async () => {
+    const usernameLength = await debounce(username.value.length);
+    applyUsernameValidations(usernameLength);
+});
+
+email.addEventListener("input", async () => {
+    const emailValue = await debounce(email.value);
+    applyEmailValidations(emailValue);
+});
+
+password.addEventListener("input", async () => {
+    if (confirmPassword.value) {
+        applyConfirmPasswordlidations(confirmPassword.value);
+    }
+
+    const passwordLength = await debounce(password.value.length);
+    applyPasswordValidations(passwordLength);
+});
+
+confirmPassword.addEventListener("input", async () => {
+    const confirmPasswordValue = await debounce(confirmPassword.value);
+    applyConfirmPasswordlidations(confirmPasswordValue);
+})
+
+
+function applyUsernameValidations(usernameLength) {
     const usernameError = document.querySelector("#username-error");
 
     if (usernameLength < 4) {
@@ -54,54 +56,61 @@ function validateUsername(usernameLength) {
         addErrorBorder(username);
         reportError(usernameError, "Username must be shorter than 20 characters");
         return false;
-    } else {
-        addSuccessBorder(username);
-        removeError(usernameError);
-        return true;
-    }
+    } 
+
+    addSuccessBorder(username);
+    removeError(usernameError);
+    return true;
 }
 
-function validateEmail2(emailValue) {
+function applyEmailValidations(emailValue) {
     const emailError = document.querySelector("#email-error");
 
     if (validateEmail(emailValue)) {
         addSuccessBorder(email);
         removeError(emailError);
         return true;
-    } else {
-        addErrorBorder(email);
-        reportError(emailError, "Email is invalid");
-        return false;
-    }
+    } 
+
+    addErrorBorder(email);
+    reportError(emailError, "Email is invalid");
+    return false;
 }
 
-function validatePassword(passwordLength) {
+function validateEmail(email) {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+}
+
+function applyPasswordValidations(passwordLength) {
     const passwordError = document.querySelector("#password-error");
 
     if (passwordLength < 8) {
         reportError(passwordError, "Password needs to be longer than 8 characters");
         addErrorBorder(password)
         return false;
-    } else {
-        removeError(passwordError);
-        addSuccessBorder(password);
-        return true;
-    }
+    } 
+
+    removeError(passwordError);
+    addSuccessBorder(password);
+    return true;
 }
 
-function validateConfirmPassword(value) {
+function applyConfirmPasswordlidations(value) {
     const confirmPasswordError = document.querySelector("#confirm-password-error");
 
     if (value !== password.value) {
-        console.log(value, password.value);
         reportError(confirmPasswordError, "Passwords don't match");
         addErrorBorder(confirmPassword);
         return false;
-    } else {
-        removeError(confirmPasswordError);
-        addSuccessBorder(confirmPassword);
-        return true;
-    }
+    } 
+
+    removeError(confirmPasswordError);
+    addSuccessBorder(confirmPassword);
+    return true;
 }
 
 function reportError(element, message) {
@@ -132,11 +141,3 @@ function addClass(element, className) {
 function removeClass(element, className) {
     element.classList.remove(className);
 }
-
-function validateEmail(email) {
-    return String(email)
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-};
