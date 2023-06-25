@@ -6,10 +6,29 @@ const email = document.querySelector("#email");
 const password = document.querySelector("#password");
 const confirmPassword = document.querySelector("#confirm-password");
 
-username.addEventListener("input", applyUsernaneValidations);
-email.addEventListener("input", applyEmailValidations);
-password.addEventListener("input", applyPasswordValidations);
-confirmPassword.addEventListener("input", applyConfirmPasswordValidations);
+username.addEventListener("input", async () => {
+    const usernameLength = await debounce(username.value.length);
+    validateUsername(usernameLength);
+});
+
+email.addEventListener("input", async () => {
+    const emailValue = await debounce(email.value);
+    validateEmail2(emailValue);
+});
+
+password.addEventListener("input", async () => {
+    if (confirmPassword.value) {
+        validateConfirmPassword(confirmPassword.value);
+    }
+
+    const passwordLength = await debounce(password.value.length);
+    validatePassword(passwordLength);
+});
+
+confirmPassword.addEventListener("input", async () => {
+    const confirmPasswordValue = await debounce(confirmPassword.value);
+    return validateConfirmPassword(confirmPasswordValue);
+});
 
 form.addEventListener("submit", async e => {
     e.preventDefault();
@@ -17,19 +36,12 @@ form.addEventListener("submit", async e => {
     const usernameValidationsResponse = validateUsername(username.value.length);
     const emailValidationsResponse = validateEmail2(email.value);
     const passwordValidationsResponse = validatePassword(password.value);
-    const confirmPasswordValidationsResponse = validateConfirmPassword();
+    const confirmPasswordValidationsResponse = validateConfirmPassword(confirmPassword.value);
     if (usernameValidationsResponse && emailValidationsResponse && passwordValidationsResponse && confirmPasswordValidationsResponse) {
         form.submit();
     } 
 
 })
-
-async function applyUsernaneValidations(e) {
-
-    const usernameLength = await debounce(username.value.length);
-    validateUsername(usernameLength)
-    
-}
 
 function validateUsername(usernameLength) {
     const usernameError = document.querySelector("#username-error");
@@ -49,12 +61,6 @@ function validateUsername(usernameLength) {
     }
 }
 
-async function applyEmailValidations(e) {
-
-    const emailValue = await debounce(email.value);
-    validateEmail2(emailValue);
-}
-
 function validateEmail2(emailValue) {
     const emailError = document.querySelector("#email-error");
 
@@ -67,16 +73,6 @@ function validateEmail2(emailValue) {
         reportError(emailError, "Email is invalid");
         return false;
     }
-}
-
-async function applyPasswordValidations(e) {
-
-    if (confirmPassword.value) {
-        await applyConfirmPasswordValidations();
-    }
-
-    const passwordLength = await debounce(password.value.length);
-    validatePassword(passwordLength);
 }
 
 function validatePassword(passwordLength) {
@@ -93,15 +89,11 @@ function validatePassword(passwordLength) {
     }
 }
 
-async function applyConfirmPasswordValidations(e) {
-    const confirmPasswordValue = await debounce(confirmPassword.value);
-    return validateConfirmPassword(confirmPasswordValue);
-}
-
 function validateConfirmPassword(value) {
     const confirmPasswordError = document.querySelector("#confirm-password-error");
 
     if (value !== password.value) {
+        console.log(value, password.value);
         reportError(confirmPasswordError, "Passwords don't match");
         addErrorBorder(confirmPassword);
         return false;
