@@ -14,10 +14,10 @@ confirmPassword.addEventListener("input", applyConfirmPasswordValidations);
 form.addEventListener("submit", async e => {
     e.preventDefault();
 
-    const usernameValidationsResponse = await applyUsernaneValidations();
-    const emailValidationsResponse = await applyEmailValidations();
-    const passwordValidationsResponse = await applyPasswordValidations();
-    const confirmPasswordValidationsResponse = await applyConfirmPasswordValidations();
+    const usernameValidationsResponse = validateUsername(username.value.length);
+    const emailValidationsResponse = validateEmail2(email.value);
+    const passwordValidationsResponse = validatePassword(password.value);
+    const confirmPasswordValidationsResponse = validateConfirmPassword();
     if (usernameValidationsResponse && emailValidationsResponse && passwordValidationsResponse && confirmPasswordValidationsResponse) {
         form.submit();
     } 
@@ -25,9 +25,14 @@ form.addEventListener("submit", async e => {
 })
 
 async function applyUsernaneValidations(e) {
-    const usernameError = document.querySelector("#username-error");
 
     const usernameLength = await debounce(username.value.length);
+    validateUsername(usernameLength)
+    
+}
+
+function validateUsername(usernameLength) {
+    const usernameError = document.querySelector("#username-error");
 
     if (usernameLength < 4) {
         addErrorBorder(username);
@@ -45,9 +50,15 @@ async function applyUsernaneValidations(e) {
 }
 
 async function applyEmailValidations(e) {
+
+    const emailValue = await debounce(email.value);
+    validateEmail2(emailValue);
+}
+
+function validateEmail2(emailValue) {
     const emailError = document.querySelector("#email-error");
 
-    if (validateEmail(await debounce(email.value))) {
+    if (validateEmail(emailValue)) {
         addSuccessBorder(email);
         removeError(emailError);
         return true;
@@ -59,13 +70,18 @@ async function applyEmailValidations(e) {
 }
 
 async function applyPasswordValidations(e) {
-    const passwordError = document.querySelector("#password-error");
 
     if (confirmPassword.value) {
         await applyConfirmPasswordValidations();
     }
 
     const passwordLength = await debounce(password.value.length);
+    validatePassword(passwordLength);
+}
+
+function validatePassword(passwordLength) {
+    const passwordError = document.querySelector("#password-error");
+
     if (passwordLength < 8) {
         reportError(passwordError, "Password needs to be longer than 8 characters");
         addErrorBorder(password)
@@ -75,15 +91,17 @@ async function applyPasswordValidations(e) {
         addSuccessBorder(password);
         return true;
     }
-
-    
 }
 
 async function applyConfirmPasswordValidations(e) {
+    const confirmPasswordValue = await debounce(confirmPassword.value);
+    return validateConfirmPassword(confirmPasswordValue);
+}
+
+function validateConfirmPassword(value) {
     const confirmPasswordError = document.querySelector("#confirm-password-error");
 
-    const confirmPasswordValue = await debounce(confirmPassword.value);
-    if (confirmPasswordValue !== password.value) {
+    if (value !== password.value) {
         reportError(confirmPasswordError, "Passwords don't match");
         addErrorBorder(confirmPassword);
         return false;
